@@ -1,0 +1,4 @@
+repository "WizardChess2@BombChomp_LLC@cloud"
+  path "/"
+    br "/main"
+    co "/main"
