@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a3614b108aa948a5a1e74f276a178a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingBoardLayout: {fileID: 11400000, guid: a1b981e543ffa78489ab9034c01429ca, type: 2}
+  startingBoardLayout: {fileID: 11400000, guid: 99b892353e7874a5e9b18c599fecc369, type: 2}
   board: {fileID: 813159362}
   chessUIManager: {fileID: 1105548846}
 --- !u!114 &304279446
@@ -175,8 +175,11 @@ MonoBehaviour:
   - {fileID: 104878, guid: 48d5ea4ff810d0e4ea36af7235dd5fd7, type: 3}
   - {fileID: 103078, guid: 6f38c700bedefe64f8364436528e5c3d, type: 3}
   - {fileID: 114028, guid: 43ef2ba32fda59c42a1410ea490d494b, type: 3}
+  - {fileID: 103078, guid: a089e329eb9959a42bc293cd4f8cce02, type: 3}
+  - {fileID: 104878, guid: 4dff5d5baa3d6294fae66ca6cf1b94b0, type: 3}
   blue: {fileID: 2100000, guid: a12783ab95c7d4913b72478c6bb3e8d4, type: 2}
   red: {fileID: 2100000, guid: 30330db484be54edbb72aaf170eacc0d, type: 2}
+  black: {fileID: 2100000, guid: c129ed3fd34792046b44b2e6aa1b857d, type: 2}
 --- !u!4 &304279447
 Transform:
   m_ObjectHideFlags: 0

@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardSquares:
   - position: {x: 4, y: 8}
-    pieceType: 2
+    pieceType: 6
     teamColor: 1
   - position: {x: 1, y: 6}
-    pieceType: 2
+    pieceType: 6
     teamColor: 1
   - position: {x: 8, y: 7}
-    pieceType: 2
+    pieceType: 6
     teamColor: 1
   - position: {x: 1, y: 2}
-    pieceType: 2
+    pieceType: 6
     teamColor: 0
   - position: {x: 5, y: 1}
-    pieceType: 2
+    pieceType: 6
     teamColor: 0
   - position: {x: 8, y: 3}
-    pieceType: 2
+    pieceType: 6
     teamColor: 0

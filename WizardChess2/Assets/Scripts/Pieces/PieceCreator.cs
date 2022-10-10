@@ -8,6 +8,7 @@ public class PieceCreator : MonoBehaviour{
     [SerializeField] private GameObject[] piecesPrefab;
     [SerializeField] private Material blue;
     [SerializeField] private Material red;
+    [SerializeField] private Material black;
     private Dictionary<string, GameObject> nameToPieceDict = new Dictionary<string, GameObject>();
 
     private void Awake(){
@@ -27,5 +28,8 @@ public class PieceCreator : MonoBehaviour{
 
     public Material GetTeamMaterial(TeamColor color){
         return color == TeamColor.Blue ? blue : red;
+    }
+    public Material GetBlackMaterial() {
+        return black;
     }
 }

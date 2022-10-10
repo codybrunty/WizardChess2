@@ -65,17 +65,30 @@ public class ChessGameController : MonoBehaviour{
         }
     }
 
+    public void CreateFire(Vector2Int coordinates) {
+        Type type = Type.GetType("Fire");
+        CreatePieceAndInitialize(coordinates, activePlayer.teamColor, type);
+    }
+
     private void CreatePieceAndInitialize(Vector2Int squareCoordinates, TeamColor teamColor, Type type){
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
         newPiece.SetData(squareCoordinates, teamColor, board);
-        Material teamMaterial = pieceCreator.GetTeamMaterial(teamColor);
-        newPiece.SetMaterial(teamMaterial);
+
+        Material teamMaterial;
+        if (type == Type.GetType("Fire")) {
+            teamMaterial = pieceCreator.GetBlackMaterial();
+        }
+        else {
+            teamMaterial = pieceCreator.GetTeamMaterial(teamColor);
+        }
+        newPiece.SetMaterial(teamMaterial); 
+        
         board.SetPieceOnBoard(squareCoordinates,newPiece);
         ChessPlayer currentPlayer = teamColor == TeamColor.Blue ? bluePlayer : redPlayer;
         currentPlayer.AddPiece(newPiece);
     }
 
-    private void GenerateAllPossiblePlayerMoves(ChessPlayer player) {
+    public void GenerateAllPossiblePlayerMoves(ChessPlayer player) {
         player.GenerateAllPossibleMoves();
     }
     public bool IsTeamTurnActive(TeamColor teamColor) {
@@ -85,15 +98,24 @@ public class ChessGameController : MonoBehaviour{
     internal void EndTurn() {
         GenerateAllPossiblePlayerMoves(activePlayer);
         GenerateAllPossiblePlayerMoves(GetOpponentToPlayer(activePlayer));
-        if (CheckIfGameIsFinished()) {
+
+        //if (CheckIfChessGameIsFinished()) {
+        if (CheckIfWizardChessGameIsFinished()) { 
             EndGame();
         }
         else {
             ChangeActiveTeam();
         }
+
+
     }
 
-    private bool CheckIfGameIsFinished() {
+    public void UpdateAllMoves() {
+        GenerateAllPossiblePlayerMoves(activePlayer);
+        GenerateAllPossiblePlayerMoves(GetOpponentToPlayer(activePlayer));
+    }
+
+    private bool CheckIfChessGameIsFinished() {
         Piece[] kingAttackingPieces = activePlayer.GetPiecesAttackingOppositePieceOfType<King>();
         if(kingAttackingPieces.Length > 0) {
             ChessPlayer oppositePlayer = GetOpponentToPlayer(activePlayer);
@@ -107,6 +129,22 @@ public class ChessGameController : MonoBehaviour{
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    private bool CheckIfWizardChessGameIsFinished() {
+        //check if opponent can make any moves
+        ChessPlayer oppositePlayer = GetOpponentToPlayer(activePlayer);
+        Piece[] allWizards = oppositePlayer.GetPiecesOfType<Wizard>();
+        int count = 0;
+        foreach (Piece piece in allWizards) { 
+            if(piece.availableMoves.Count > 0) {
+                count++;
+            }
+        }
+        if (count == 0) {
+            return true;
         }
         return false;
     }

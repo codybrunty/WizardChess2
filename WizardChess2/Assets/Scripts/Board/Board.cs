@@ -15,6 +15,7 @@ public class Board : MonoBehaviour{
     private Piece selectedPiece;
     private ChessGameController chessGameController;
     private SquareSelectorCreator squareSelectorCreator;
+    private bool isFirstPhase = true;
 
     private void Awake() {
         squareSelectorCreator = GetComponent<SquareSelectorCreator>();
@@ -65,10 +66,12 @@ public class Board : MonoBehaviour{
         squareSelectorCreator.ClearSelection();
     }
     private void SelectPiece(Piece piece) {
-        chessGameController.RemoveMovesEnablingAttackOnPieceOfType<King>(piece);
-        selectedPiece = piece;
-        List<Vector2Int> selection = selectedPiece.availableMoves;
-        ShowSelectionSquares(selection);
+        if(isFirstPhase){
+            chessGameController.RemoveMovesEnablingAttackOnPieceOfType<King>(piece);
+            selectedPiece = piece;
+            List<Vector2Int> selection = selectedPiece.availableMoves;
+            ShowSelectionSquares(selection);
+        }
     }
 
     private void ShowSelectionSquares(List<Vector2Int> selection) {
@@ -86,16 +89,38 @@ public class Board : MonoBehaviour{
     }
 
     private void OnSelectedPieceMoved(Vector2Int coordinates, Piece piece) {
-        TryToTakeOpponentPiece(coordinates);
-        UpdateBoardOnPieceMove(coordinates, piece.occupiedSquare, piece, null);
-        selectedPiece.MovePiece(coordinates);
-        DeselectPiece();
+        if (isFirstPhase) {
+            TryToTakeOpponentPiece(coordinates);
+            UpdateBoardOnPieceMove(coordinates, piece.occupiedSquare, piece, null);
+            selectedPiece.MovePiece(coordinates);
+            DeselectPiece();
+            WizardTurnOne(coordinates);
+        }
+        else {
+            DeselectPiece();
+            WizardTurnTwo(coordinates);
+        }
+    }
+
+    private void EndTurn( ) {
+        chessGameController.EndTurn();
+    }
+
+    private void WizardTurnOne(Vector2Int coordinates) {
+        chessGameController.UpdateAllMoves();
+        SelectPiece(GetPieceOnSquare(coordinates));
+        isFirstPhase = false;
+
+    }
+    private void WizardTurnTwo(Vector2Int coordinates) {
+        chessGameController.CreateFire(coordinates);
+        isFirstPhase = true;
         EndTurn();
     }
 
     private void TryToTakeOpponentPiece(Vector2Int coordinates) {
         Piece piece = GetPieceOnSquare(coordinates);
-        if(piece!=null && !selectedPiece.IsFromSameTeam(piece)) {
+        if (piece != null && !selectedPiece.IsFromSameTeam(piece)) {
             TakePiece(piece);
         }
     }
@@ -106,11 +131,6 @@ public class Board : MonoBehaviour{
             chessGameController.OnPieceRemoved(piece);
         }
     }
-
-    private void EndTurn() {
-        chessGameController.EndTurn();
-    }
-
     public void UpdateBoardOnPieceMove(Vector2Int newCoordinates, Vector2Int oldCoordinates, Piece newPiece, Piece oldPiece) {
         grid[oldCoordinates.x, oldCoordinates.y] = oldPiece;
         grid[newCoordinates.x, newCoordinates.y] = newPiece;
